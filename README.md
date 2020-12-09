@@ -1,8 +1,10 @@
 # Luftquali-Application s
 
 # Zur Nutzung der Application ist Docker benötigt
+https://www.docker.com/get-started
 
-docker-compose -f docker-compose.yml up
+Nach dem Installieren die repository clonen und dann im der repository:
+`docker-compose -f docker-compose.yml up`
 
 
 ## app
@@ -17,7 +19,9 @@ Html Website mit einer Verbindung zum Python Server
     - Nginx 
 
 ## zigbee
-Microservice zum auslesen der Zigbee Daten und schreiben in die Datenbank
+Microservice zum auslesen der Zigbee Daten:
+    - Schreiben in die Datenbank
+    - Zur Verfügungstellen der Daten über eine API 
 
 ## Database
 Mysql Datenbank
