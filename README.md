@@ -7,6 +7,7 @@ Nach dem Installieren die repository clonen und dann im der repository:
 `docker-compose -f docker-compose.yml up --build`
 `docker-compose up --build`
 
+`http://localhost` - Dashboard Template
 
 ## app
 Python Server für die Serverseitige Handhabung
