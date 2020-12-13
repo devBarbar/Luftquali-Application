@@ -1,4 +1,4 @@
-//var ws = new WebSocket("ws://localhost:5000");
+var ws = new WebSocket("ws://localhost:5000/ws");
 
 ws.onopen = function() {
                   
@@ -9,7 +9,7 @@ ws.onopen = function() {
   
  ws.onmessage = function (evt) { 
     var received_msg = evt.data;
-    alert("Message is received...");
+    alert(received_msg);
  };
   
  ws.onclose = function() { 

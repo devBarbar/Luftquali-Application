@@ -2,6 +2,9 @@ import tornado.web
 import tornado.ioloop
 import tornado.websocket
 import tornado
+from sqlalchemy import create_engine
+
+engine = create_engine("mysql+mysqlconnector://user:password@localhost:3306/dbname")
 
 class MainHandler(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
