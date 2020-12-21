@@ -3,8 +3,8 @@ var ws = new WebSocket("ws://localhost:5000/ws");
 ws.onopen = function() {
                   
     // Web Socket is connected, send data using send()
-    ws.send("Message to send");
-    alert("Message is sent...");
+    //ws.send("Message to send");
+    //alert("Message is sent...");
  };
   
  ws.onmessage = function (evt) { 

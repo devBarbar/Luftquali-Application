@@ -10,16 +10,28 @@ var chartColors = {
   grey: '#EBEFF6'
 };
 
-var config1 = {
+var config_CO2 = { //This is the Config for one of the CO2 Graphs
   type: "line",
   data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ["VAR:CO2_GRAPH_OLD_6", "VAR:CO2_GRAPH_OLD_5", "VAR:CO2_GRAPH_OLD_4", "VAR:CO2_GRAPH_OLD_3", "VAR:CO2_GRAPH_OLD_2", "VAR:CO2_GRAPH_OLD_1", "VAR:CO2_GRAPH_CURRENT"], //EXTEND HOW MANY LABLES ARE DISPLAYED (MAYBE inside Settings)
     datasets: [
       {
-        label: "Balance",
-        backgroundColor: "#fff",
-        borderColor: "#fff",
-        data: [20, 40, 20, 70, 10, 50, 20],
+        label: "CO2_MG811",
+        backgroundColor: "#0f0",
+        borderColor: "#0f0",
+        data: [20, 40, 20, 70, 10, 50, 100],  //TODO HERE TO PUT THE LIVE VARIABLES
+        fill: false,
+        pointBorderWidth: 100,
+        pointBorderColor: "transparent",
+        pointRadius: 3,
+        pointBackgroundColor: "transparent",
+        pointHoverBackgroundColor: "rgba(63,82,227,1)",
+      },
+      {
+        label: "CO2_SHT21",
+        backgroundColor: "#f00",
+        borderColor: "#f00",
+        data: [40, 30, 80, 50, 30, 70, 10],  //TODO HERE TO PUT THE LIVE VARIABLES
         fill: false,
         pointBorderWidth: 100,
         pointBorderColor: "transparent",
@@ -34,12 +46,12 @@ var config1 = {
     maintainAspectRatio: false, 
     layout: {
       padding: {
-        left: -10,
+        left: -10,  //Damit die line auch genau am rand beginnt
         top: 10,
       },
     },
     legend: {
-      display: false,
+      display: true,
     },
     title: {
       display: false,
@@ -78,16 +90,16 @@ var config1 = {
     },
   },
 };
-var config2 = {
+var config_volatiles = {
   type: "line",
   data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ["VAR:VOLATILES_GRAPH_OLD_6", "VAR:VOLATILES_GRAPH_OLD_5", "VAR:VOLATILES_GRAPH_OLD_4", "VAR:VOLATILES_GRAPH_OLD_3", "VAR:VOLATILES_GRAPH_OLD_2", "VAR:VOLATILES_GRAPH_OLD_1", "VAR:VOLATILES_GRAPH_CURRENT"], //EXTEND HOW MANY LABLES ARE DISPLAYED (MAYBE inside Settings)
     datasets: [
       {
-        label: "Revenue",
+        label: "Volatiles",
         backgroundColor: "#fff",
         borderColor: "#fff",
-        data: [20, 800, 300, 400, 10, 50, 20],
+        data: [20, 800, 300, 400, 10, 50, 20],  //TODO HERE TO PUT THE LIVE VARIABLES
         fill: false,
         pointBorderWidth: 100,
         pointBorderColor: "transparent",
@@ -146,16 +158,16 @@ var config2 = {
     },
   },
 };
-var config3 = {
+var config_humidity = {
   type: "line",
   data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ["VAR:HUMIDITY_GRAPH_OLD_6", "VAR:HUMIDITY_GRAPH_OLD_5", "VAR:HUMIDITY_GRAPH_OLD_4", "VAR:HUMIDITY_GRAPH_OLD_3", "VAR:HUMIDITY_GRAPH_OLD_2", "VAR:HUMIDITY_GRAPH_OLD_1", "VAR:HUMIDITY_GRAPH_CURRENT"], //EXTEND HOW MANY LABLES ARE DISPLAYED (MAYBE inside Settings)
     datasets: [
       {
-        label: "Orders",
+        label: "Humidity",
         backgroundColor: "#fff",
         borderColor: "#fff",
-        data: [20, 40, 20, 200, 10, 540, 723],
+        data: [20, 40, 20, 200, 10, 540, 723],  //TODO HERE TO PUT THE LIVE VARIABLES
         fill: false,
         pointBorderWidth: 100,
         pointBorderColor: "transparent",
@@ -215,16 +227,16 @@ var config3 = {
     },
   },
 };
-var config4 = {
+var config_temperature = {
   type: "line",
   data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ["VAR:TEMPERATURE_GRAPH_OLD_6", "VAR:TEMPERATURE_GRAPH_OLD_5", "VAR:TEMPERATURE_GRAPH_OLD_4", "VAR:TEMPERATURE_GRAPH_OLD_3", "VAR:TEMPERATURE_GRAPH_OLD_2", "VAR:TEMPERATURE_GRAPH_OLD_1", "VAR:TEMPERATURE_GRAPH_CURRENT"], //EXTEND HOW MANY LABLES ARE DISPLAYED (MAYBE inside Settings)
     datasets: [
       {
-        label: "My First dataset",
+        label: "Temperature",
         backgroundColor: "#fff",
         borderColor: "#fff",
-        data: [20, 40, 20, 70, 10, 5, 23],
+        data: [20, 40, 20, 70, 10, 5, 23], //TODO HERE TO PUT THE LIVE VARIABLES
         fill: false,
         pointBorderWidth: 100,
         pointBorderColor: "transparent",
@@ -397,19 +409,11 @@ var ctxBar = document.getElementById("bar").getContext("2d");
 var myBar = new Chart(ctxBar, {
   type: 'bar',
   data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    labels: ["VAR:VOLATILE1", "VAR:VOLATILE2", "VAR:VOLATILE3", "VAR:VOLATILE4", "VAR:VOLATILE5", "VAR:VOLATILE6", "VAR:VOLATILE7"],
     datasets: [{
-      label: 'Students',
+      //label: 'Students',
       backgroundColor: [chartColors.grey, chartColors.grey, chartColors.grey, chartColors.grey, chartColors.info, chartColors.blue, chartColors.grey],
-      data: [
-        5, 
-        10, 
-        30, 
-        40, 
-        35, 
-        55, 
-        15, 
-      ]
+      data: [5, 10, 30, 40, 35, 55, 15 ] //TODO PUT LIVE HATA HERE
     }]
   },
   options: {
@@ -470,7 +474,7 @@ var radialBarsOptions = {
         },
         total: {
           show: true,
-          label: "Earnings",
+          label: "Volatiles",
           color: "#25A6F1",
           fontSize: "16px",
           formatter: function(w) {
@@ -481,15 +485,15 @@ var radialBarsOptions = {
       },
     },
   },
-  labels: ["Apples", "Oranges", "Bananas", "Berries"],
+  //labels: ["Apples", "Oranges", "Bananas", "Berries"],
 };
 var radialBars = new ApexCharts(document.querySelector("#radialBars"), radialBarsOptions);
 radialBars.render();
-let ctx1 = document.getElementById("canvas1").getContext("2d");
-let ctx2 = document.getElementById("canvas2").getContext("2d");
-let ctx3 = document.getElementById("canvas3").getContext("2d");
-let ctx4 = document.getElementById("canvas4").getContext("2d");
-var lineChart1 = new Chart(ctx1, config1);
-var lineChart2 = new Chart(ctx2, config2);
-var lineChart3 = new Chart(ctx3, config3);
-var lineChart4 = new Chart(ctx4, config4);
+let ctx_CO2                 = document.getElementById("canvas1").getContext("2d");
+let ctx_volatiles           = document.getElementById("canvas2").getContext("2d");
+let ctx_humidity            = document.getElementById("canvas3").getContext("2d");
+let ctx_temperature         = document.getElementById("canvas4").getContext("2d");
+var line_chart_CO2          = new Chart(ctx_CO2, config_CO2);
+var line_chart_volatiles    = new Chart(ctx_volatiles, config_volatiles);
+var line_chart_humidity     = new Chart(ctx_humidity, config_humidity);
+var line_chart_temperature  = new Chart(ctx_temperature, config_temperature);

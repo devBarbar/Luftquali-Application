@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datatable - Voler Admin Dashboard</title>
+    <title>Database</title>
     
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     
@@ -24,14 +24,14 @@
         <ul class="menu">
             
             
-                <li class='sidebar-title'>Main Menu</li>
+            <li class='sidebar-title'>Menu</li>
             
             
             
                 <li class="sidebar-item  ">
                     <a href="index.html" class='sidebar-link'>
-                        <i data-feather="home" width="20"></i> 
-                        <span>Dashboard</span>
+                        <i data-feather="star" width="20"></i> 
+                        <span>Statistics for VAR:CURRENT_SELECTED_ROOM_NAME</span>
                     </a>
                     
                 </li>
@@ -39,13 +39,13 @@
             
             
             
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i data-feather="triangle" width="20"></i> 
-                        <span>Components</span>
+               <li class="sidebar-item">
+                    <a href="room-planner.html" class='sidebar-link'>
+                        <i data-feather="home" width="20"></i> 
+                        <span>Room-Planner</span>
                     </a>
                     
-                    <ul class="submenu ">
+                   <!--<ul class="submenu ">
                         
                         <li>
                             <a href="component-alert.html">Alert</a>
@@ -103,14 +103,14 @@
                             <a href="component-tooltips.html">Tooltips</a>
                         </li>
                         
-                    </ul>
+                    </ul>-->
                     
                 </li>
 
             
             
             
-                <li class="sidebar-item  has-sub">
+               <!--<li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i data-feather="briefcase" width="20"></i> 
                         <span>Extra Components</span>
@@ -133,7 +133,7 @@
             
             
             
-                <li class='sidebar-title'>Forms &amp; Tables</li>
+            <li class='sidebar-title'>Forms &amp; Tables</li>
             
             
             
@@ -206,21 +206,21 @@
                     
                 </li>
 
-            
+            -->
             
             
                 <li class="sidebar-item active ">
                     <a href="table-datatable.html" class='sidebar-link'>
-                        <i data-feather="file-plus" width="20"></i> 
-                        <span>Datatable</span>
+                        <i data-feather="database" width="20"></i> 
+                        <span>Database VAR:ADMIN_ONLY</span>
                     </a>
                     
                 </li>
 
+            <!--
             
             
-            
-                <li class='sidebar-title'>Extra UI</li>
+            <li class='sidebar-title'>Extra UI</li>
             
             
             
@@ -274,14 +274,14 @@
             
             
             
-                <li class='sidebar-title'>Pages</li>
+            <li class='sidebar-title'>Pages</li>
             
             
-            
+            -->
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i data-feather="user" width="20"></i> 
-                        <span>Authentication</span>
+                        <span>Login</span>
                     </a>
                     
                     <ul class="submenu ">
@@ -304,7 +304,7 @@
 
             
             
-            
+            <!--
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i data-feather="alert-circle" width="20"></i> 
@@ -329,7 +329,7 @@
                     
                 </li>
 
-            
+            -->
             
          
         </ul>
@@ -357,19 +357,19 @@
                                 <ul class="list-group rounded-none">
                                     <li class="list-group-item border-0 align-items-start">
                                         <div class="avatar bg-success mr-3">
-                                            <span class="avatar-content"><i data-feather="shopping-cart"></i></span>
+                                            <span class="avatar-content"><i data-feather="alert-triangle"></i></span> <!--TODO Find out how to change color of icon to red-->
                                         </div>
                                         <div>
-                                            <h6 class='text-bold'>New Order</h6>
+                                            <h6 class='text-bold'>Warnings</h6>
                                             <p class='text-xs'>
-                                                An order made by Ahmad Saugi for product Samsung Galaxy S69
+                                                VAR:AIR_QUALITY_WARNING
                                             </p>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                        <li class="dropdown nav-icon mr-2">
+                        <!--<li class="dropdown nav-icon mr-2">
                             <a href="#" data-toggle="dropdown" class="nav-link  dropdown-toggle nav-link-lg nav-link-user">
                                 <div class="d-lg-inline-block">
                                     <i data-feather="mail"></i>
@@ -382,13 +382,13 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
                             </div>
-                        </li>
+                        </li>-->
                         <li class="dropdown">
                             <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                                 <div class="avatar mr-1">
                                     <img src="assets/images/avatar/avatar-s-1.png" alt="" srcset="">
                                 </div>
-                                <div class="d-none d-md-block d-lg-inline-block">Hi, Saugi</div>
+                                <div class="d-none d-md-block d-lg-inline-block">Hi, VAR:USER_NAME</div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
@@ -406,15 +406,15 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Datatable</h3>
+                <h3>Database</h3>
                 <p class="text-subtitle text-muted">We use 'simple-datatables' made by @fiduswriter. You can check the full documentation <a href="https://github.com/fiduswriter/Simple-DataTables/wiki">here</a>.</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class='breadcrumb-header'>
-                    <ol class="breadcrumb">
+                    <!--<ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Datatable</li>
-                    </ol>
+                        <li class="breadcrumb-item active" aria-current="page">Database</li>
+                    </ol>-->
                 </nav>
             </div>
         </div>
@@ -678,14 +678,14 @@
     </section>
 </div>
 
-            <footer>
-                <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-left">
-                        <p>2020 &copy; Voler</p>
-                    </div>
-                    <div class="float-right">
+<footer>
+    <div class="footer clearfix mb-0 text-muted">
+        <div class="float-left">
+            <p>By VAR:TEAM_NAME</p>
+                </div>
+                    <!--div class="float-right">
                         <p>Crafted with <span class='text-danger'><i data-feather="heart"></i></span> by <a href="http://ahmadsaugi.com">Ahmad Saugi</a></p>
-                    </div>
+                    </div>-->
                 </div>
             </footer>
         </div>
