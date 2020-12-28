@@ -1,31 +1,41 @@
 version: '3'
 
 services:
-  web:
-    build: ./app
-    ports:
-      - "5000:8888"
-    volumes:
-      - .:/code
-
-  nginx:
-    build: ./static
-    volumes:
-      - .:/code
-    ports:
-        - 80:80
-      
   mysql_database:
     image: mysql
     container_name: mysql_database
     environment: 
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: user 
+      MYSQL_DATABASE: mysql_database
+      MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
       - 3306:3306
+    expose:
+      - '3306'
     volumes:
-      - luftqualitaet_mysql_database_data:/var/lib/mysql
+      - ./database:/var/lib/mysql
+    
+  web:
+    build: ./app
+    ports:
+      - "5000:8888"
+    links:
+      - mysql_database
+    volumes:
+      - ./app:/app
+    restart: on-failure
 
-volumes:
-  luftqualitaet_mysql_database_data:
+  # nginx:
+  #   build: ./static
+  #   volumes:
+  #     - .:/code
+  #   ports:
+  #       - 80:80
+    
+  zigbee:
+    build: ./zigbee
+    ports:
+      - "8001"
+      
+  

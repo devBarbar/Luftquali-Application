@@ -7,7 +7,13 @@ Nach dem Installieren die repository clonen und dann im der repository:
 `docker-compose -f docker-compose.yml up --build`
 `docker-compose up --build`
 
-`http://localhost` - Dashboard Template
+Starten des React Frontends:
+`cd gatsby-admin-template`
+`npm install`
+`gatsby develop`
+`docker-compose up --build`
+
+`http://localhost:8000` - Dashboard Template
 
 ## app
 Python Server für die Serverseitige Handhabung
@@ -16,14 +22,17 @@ Python Server für die Serverseitige Handhabung
     - Empfangen von Nachrichten von der Website
     - basierend auf dem Websocket Protocol
 
-## static
-Html Website mit einer Verbindung zum Python Server
+
+## gatsby-admin-template
+React Frontend
     - Nginx 
+
 
 ## zigbee
 Microservice zum auslesen der Zigbee Daten:
     - Schreiben in die Datenbank
     - Zur Verfügungstellen der Daten über eine API 
+
 
 ## Database
 Mysql Datenbank
