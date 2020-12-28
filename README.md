@@ -4,14 +4,15 @@
 https://www.docker.com/get-started
 
 Nach dem Installieren die repository clonen und dann im der repository:
+
 `docker-compose -f docker-compose.yml up --build`
 `docker-compose up --build`
 
 Starten des React Frontends:
+
 `cd gatsby-admin-template`
 `npm install`
 `gatsby develop`
-`docker-compose up --build`
 
 `http://localhost:8000` - Dashboard Template
 
