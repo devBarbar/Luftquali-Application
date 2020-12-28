@@ -125,21 +125,6 @@ class helper:
                 anrede = "Sehr geehrter Herr %s" % nachname
             else:
                 anrede = "Sehr geehrte Frau %s" % nachname
-        elif language == "en":
-            if herrfrau == "Herr":
-                anrede = "Dear Mr. %s" % nachname
-            else:
-                anrede = "Dear Mrs. %s" % nachname
-        elif language == "br":
-            if herrfrau == "Herr":
-                anrede = "Prezado Sr. %s" % nachname
-            else:
-                anrede = "Prezada Sra. %s" % nachname
-        elif language == "nl":
-            if herrfrau == "Herr":
-                anrede = "Geachte heer %s" % nachname
-            else:
-                anrede = "Geachte mevrouw %s" % nachname
 
         return anrede
 
