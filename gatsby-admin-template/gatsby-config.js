@@ -25,18 +25,13 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'oah-admin',
-        short_name: 'OAH',
-        start_url: '/dashboard',
+        name: 'Luftqualität Dashboard',
+        short_name: 'FRAUAS',
+        start_url: '/',
         display: 'minimal-ui',
         icon: 'src/images/OAH.png', // This path is relative to the root of the site.
       },
     },
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId: 'UA-171177495-3',
-      },
-    },
+    `gatsby-plugin-offline`,
   ],
 };

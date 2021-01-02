@@ -11,6 +11,7 @@ import User from '@paljs/ui/User';
 import { getPathReady } from './Sidebar';
 import { Location } from '@reach/router';
 import { breakpointDown } from '@paljs/ui/breakpoints';
+import { getUser } from '../services/auth';
 
 const HeaderStyle = styled.div`
   display: flex;
@@ -61,6 +62,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
+  const user = getUser();
+  console.log(user);
   const themeOptions = [
     {
       value: 'default',
@@ -186,7 +189,12 @@ const Header: React.FC<HeaderProps> = (props) => {
                       ]}
                       Link={Link}
                     >
-                      <User image="url('/icons/icon-72x72.png')" name="Ahmed Elywa" title="Manger" size="Medium" />
+                      <User
+                        image="url('/icons/icon-72x72.png')"
+                        name={user && user.username}
+                        title="__ROLE__"
+                        size="Medium"
+                      />
                     </ContextMenu>
                   )}
                 </Location>

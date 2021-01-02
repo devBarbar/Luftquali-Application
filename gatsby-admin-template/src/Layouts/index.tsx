@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { navigate } from 'gatsby';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import themes from './themes';
 import { Layout, LayoutContent, LayoutFooter, LayoutContainer, LayoutColumns, LayoutColumn } from '@paljs/ui/Layout';
@@ -7,6 +8,7 @@ import { SidebarRefObject } from '@paljs/ui/Sidebar';
 import Header from './Header';
 import SimpleLayout from './SimpleLayout';
 import SidebarCustom from './Sidebar';
+import { isLoggedIn } from '../services/auth';
 
 const getDefaultTheme = (): DefaultTheme['name'] => {
   if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -18,6 +20,10 @@ const getDefaultTheme = (): DefaultTheme['name'] => {
 };
 
 const LayoutPage: React.FC<{ pageContext: { layout: string } }> = ({ children, pageContext }) => {
+  if (!isLoggedIn() && !location.pathname.match(/auth/)) {
+    navigate('/auth/login');
+    return null;
+  }
   const [theme, setTheme] = useState<DefaultTheme['name']>('default');
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
   const sidebarRef = useRef<SidebarRefObject>(null);
