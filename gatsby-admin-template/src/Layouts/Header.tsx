@@ -184,7 +184,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                       placement="bottom"
                       currentPath={getPathReady(location.pathname)}
                       items={[
-                        { title: 'Profile', link: { to: '/modal-overlays/tooltip' } },
+                        { title: 'Einstellungen', link: { to: '/settings/thresholds' } },
                         { title: 'Log out', link: { to: '/logout' } },
                       ]}
                       Link={Link}

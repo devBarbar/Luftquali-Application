@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column,Integer,String,ForeignKey,JSON
+from sqlalchemy import create_engine, Column,Integer,String,ForeignKey,JSON,Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from mysql.connector import (connection)
@@ -26,6 +26,16 @@ class Settings(Base):
     type = Column("TYPE",String(90))
     value = Column("VALUE",String(90))
 
+class User(Base):
+    __tablename__ = "USER"
+
+    email = Column("EMAIL", String(128), primary_key=True)
+    password = Column("PASSWORD",String(128))
+    username = Column("USERNAME", String(90))
+    last_login = Column("LAST_LOGIN", Time)
+
+time.sleep(10)
+
 engine = create_engine("mysql+mysqlconnector://user:password@mysql_database:3306/mysql_database", echo=True)
 
 Base.metadata.create_all(bind=engine)
@@ -34,6 +44,5 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 user = User()
-
 
 session.close()

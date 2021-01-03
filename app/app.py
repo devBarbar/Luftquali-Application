@@ -6,9 +6,10 @@ import re
 import json
 import logging
 from sqlalchemy import create_engine,select,insert
+from datetime import time 
 from libs.helper import helper
-from models import Rooms,session,Settings
-
+from models import Rooms,session,Settings,User
+from passlib.hash import pbkdf2_sha256
 sql_inject_re_byt = re.compile(b'\'|"')
 sql_inject_re_str = re.compile('\'|"')
 
@@ -68,6 +69,7 @@ class MainHandler(tornado.websocket.WebSocketHandler):
             answer = helper.build_json_answer(data["ID"],"INVALID",json.dumps("PLEASE ENTER MESSAGE TYPE"))
             self.write_message(answer)
             return
+
         MSG_TYPE = data["MSG_TYPE"]
 
         if MSG_TYPE == "SAVE_ROOM_TO_DATABASE":
@@ -80,6 +82,8 @@ class MainHandler(tornado.websocket.WebSocketHandler):
             except:
                 session.rollback()
             answer = helper.build_json_answer(data["ID"],"SUCCESS",json.dumps(room.name +" erfolgreich hinzugefügt"))
+
+        
         elif MSG_TYPE == "SHOW_ALL_ROOMS":
             result = session.query(Rooms).all()
             room_names = []
@@ -87,6 +91,8 @@ class MainHandler(tornado.websocket.WebSocketHandler):
                 logger.warning(room)
                 room_names.append(room.name)
             answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(room_names))
+
+
         elif MSG_TYPE == "GET_ALL_SETTINGS":
             result = session.query(Settings).all()
             settings = []
@@ -95,6 +101,42 @@ class MainHandler(tornado.websocket.WebSocketHandler):
             
             answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(settings))
             logger.warning(result)
+
+        elif MSG_TYPE == "LOGIN":
+            result = {"STATUS":"FAIL"}
+            user = session.query(User).get(data["EMAIL"])
+            if user:
+                if (pbkdf2_sha256.verify(data["PASSWORD"], user.password) == True):
+                    result = {
+                        "STATUS":"SUCCESS",
+                        "EMAIL": user.email,
+                        "USERNAME": user.username,
+                        "LAST_LOGIN":user.last_login 
+                    }
+                    
+            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(result,default=str))
+        elif MSG_TYPE == "REGISTER":
+            hashed_password = pbkdf2_sha256.encrypt(data["PASSWORD"], rounds=12000, salt_size=16)
+            user = User()
+            user.email = data["EMAIL"]
+            user.password = hashed_password
+            user.username = data["USERNAME"]
+            user.last_login = time()
+            try:
+                session.add(user)
+                session.commit()
+            except Exception as e:
+                logger.error('Error at %s', 'division', exc_info=e)
+                session.rollback()
+                self.write_message(helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps({"STATUS":"DUPLICATE"})))
+                return 
+
+            result = session.query(User).get(data["EMAIL"])
+            result = {
+                "EMAIL": result.email,
+                "PASSWORD": result.password
+            }
+            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(result))
         else:
             answer = helper.build_json_answer(data["ID"],"INVALID",json.dumps("INVALID MESSAGE TYPE"))
 

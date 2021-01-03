@@ -11,7 +11,11 @@ Nach dem Installieren die repository clonen und dann im der repository:
 Starten des React Frontends:
 
 `cd gatsby-admin-template`
+
+`npm install -g gatsby-cli`
+
 `npm install`
+
 `gatsby develop`
 
 `http://localhost:8000` - Dashboard Template
