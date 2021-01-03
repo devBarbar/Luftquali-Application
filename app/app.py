@@ -63,7 +63,6 @@ class MainHandler(tornado.websocket.WebSocketHandler):
             self.write_message( 'malformed JSON' )
             log( fh, 1,  'Out: '+'malformed JSON' )
             return
-        data = replace_dict(data)  # replace ' and "
         obj = msg_type = sid = None
         if "MSG_TYPE" not in data:
             answer = helper.build_json_answer(data["ID"],"INVALID",json.dumps("PLEASE ENTER MESSAGE TYPE"))
@@ -76,6 +75,7 @@ class MainHandler(tornado.websocket.WebSocketHandler):
             room = Rooms()
             room.name = data["ROOM_NAME"]
             room.data = data["ROOM_DATA"]
+            logger.warning(data["ROOM_DATA"])
             try:
                 session.add(room)
                 session.commit()
@@ -83,6 +83,10 @@ class MainHandler(tornado.websocket.WebSocketHandler):
                 session.rollback()
             answer = helper.build_json_answer(data["ID"],"SUCCESS",json.dumps(room.name +" erfolgreich hinzugefügt"))
 
+        elif MSG_TYPE == "GET_ROOM_FROM_DATABASE":
+            room = session.query(Rooms).get(data["ROOM_NAME"])
+            logger.warning(room)
+            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(room.data))
         
         elif MSG_TYPE == "SHOW_ALL_ROOMS":
             result = session.query(Rooms).all()

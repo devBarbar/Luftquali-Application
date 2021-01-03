@@ -4,6 +4,7 @@ import Row from '@paljs/ui/Row';
 import React, { useEffect, useState } from 'react';
 import SEO from '../components/SEO';
 import { wsp } from '../components/websocket/websocket';
+import { navigate } from 'gatsby';
 
 const Home = () => {
   const [allRooms, setAllRooms] = useState(null);
@@ -14,8 +15,14 @@ const Home = () => {
       .then((response) => setAllRooms(response.DATA)); // waits server message with corresponding requestId: {id: 'xxx', ...}
   }, []);
 
-  const loadRoomDataFromDatabase = function () {
-    wsp.open().then(() => wsp.sendRequest({ MSG_TYPE: 'GET_ROOM_FROM_DATABASE', ROOM_NAME: '' }));
+  const loadRoomDataFromDatabase = function (name) {
+    wsp
+      .open()
+      .then(() => wsp.sendRequest({ MSG_TYPE: 'GET_ROOM_FROM_DATABASE', ROOM_NAME: name }))
+      .then((response) => {
+        window.localStorage.setItem('react-planner_v0', response.DATA);
+        navigate('/floorplanner');
+      });
   };
   return (
     <div>
@@ -24,7 +31,7 @@ const Home = () => {
         {allRooms
           ? allRooms.map((val, index) => {
               return (
-                <Col breakPoint={{ xs: 12, md: 6 }}>
+                <Col onClick={(e) => loadRoomDataFromDatabase(val)} breakPoint={{ xs: 12, md: 6 }}>
                   <Card>
                     <CardHeader>{val}</CardHeader>
                     <CardBody>Funkmodul Outputs: __VAR__</CardBody>
