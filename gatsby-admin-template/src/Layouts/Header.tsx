@@ -147,34 +147,34 @@ const Header: React.FC<HeaderProps> = (props) => {
           size="Small"
           className="right"
           actions={[
-            {
-              content: (
-                <a
-                  className="left"
-                  href={`https://github.com/paljs/gatsby-admin-template`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span className="github">Support us in GitHub</span>
-                  <img src={`https://badgen.net/github/stars/paljs/gatsby-admin-template`} />
-                </a>
-              ),
-            },
-            {
-              content: (
-                <a
-                  href="https://join.slack.com/t/paljs/shared_invite/zt-ju5j9bb9-onkc9ZksqPZq~yIYJ3BfKw"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img height="20" src="/slack.svg" alt="slack" />
-                </a>
-              ),
-            },
-            {
-              icon: 'twitter',
-              url: { href: 'https://twitter.com/AhmedElywh', target: '_blank' },
-            },
+            // {
+            //   content: (
+            //     <a
+            //       className="left"
+            //       href={`https://github.com/paljs/gatsby-admin-template`}
+            //       target="_blank"
+            //       rel="noreferrer"
+            //     >
+            //       <span className="github">Support us in GitHub</span>
+            //       <img src={`https://badgen.net/github/stars/paljs/gatsby-admin-template`} />
+            //     </a>
+            //   ),
+            // },
+            // {
+            //   content: (
+            //     <a
+            //       href="https://join.slack.com/t/paljs/shared_invite/zt-ju5j9bb9-onkc9ZksqPZq~yIYJ3BfKw"
+            //       target="_blank"
+            //       rel="noreferrer"
+            //     >
+            //       <img height="20" src="/slack.svg" alt="slack" />
+            //     </a>
+            //   ),
+            // },
+            // {
+            //   icon: 'twitter',
+            //   url: { href: 'https://twitter.com/AhmedElywh', target: '_blank' },
+            // },
             {
               content: (
                 <Location>

@@ -33,11 +33,11 @@ services:
   #   ports:
   #       - 80:80
     
-  zigbee:
-    build: ./zigbee
-    ports:
-      - "8001"
-    links:
-      - mysql_database
+  # zigbee:
+  #   build: ./zigbee
+  #   ports:
+  #     - "8001"
+  #   links:
+  #     - mysql_database
       
   

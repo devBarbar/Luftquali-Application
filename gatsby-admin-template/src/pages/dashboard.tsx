@@ -20,7 +20,7 @@ const Home = () => {
       .open()
       .then(() => wsp.sendRequest({ MSG_TYPE: 'GET_ROOM_FROM_DATABASE', ROOM_NAME: name }))
       .then((response) => {
-        window.localStorage.setItem('react-planner_v0', response.DATA);
+        response.DATA && window.localStorage.setItem('react-planner_v0', response.DATA);
         navigate('/floorplanner');
       });
   };
