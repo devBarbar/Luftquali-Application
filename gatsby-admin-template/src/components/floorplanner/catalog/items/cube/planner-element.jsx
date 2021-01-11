@@ -7,49 +7,51 @@ export default {
   prototype: 'items',
 
   info: {
-    title: 'cube',
-    tag: ['demo'],
-    description: 'Demo item',
-    image: require('./cube.png')
+    title: 'sensor',
+    tag: [],
+    description: '',
+    image: require('./cube.png'),
   },
 
   properties: {
     color: {
       label: 'Color',
       type: 'color',
-      defaultValue: ReactPlannerSharedStyle.AREA_MESH_COLOR.unselected
+      defaultValue: ReactPlannerSharedStyle.AREA_MESH_COLOR.unselected,
     },
     width: {
       label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 100,
-        unit: 'cm'
-      }
+        length: 25,
+        unit: 'cm',
+      },
     },
     height: {
       label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 100,
-        unit: 'cm'
-      }
+        length: 25,
+        unit: 'cm',
+      },
     },
     depth: {
       label: 'Depth',
       type: 'length-measure',
       defaultValue: {
-        length: 100,
-        unit: 'cm'
-      }
+        length: 25,
+        unit: 'cm',
+      },
     },
   },
 
   render2D: (element, layer, scene) => {
     let style = {
-      stroke: !element.selected ? ReactPlannerSharedStyle.LINE_MESH_COLOR.unselected : ReactPlannerSharedStyle.MESH_SELECTED,
+      stroke: !element.selected
+        ? ReactPlannerSharedStyle.LINE_MESH_COLOR.unselected
+        : ReactPlannerSharedStyle.MESH_SELECTED,
       strokeWidth: 2,
-      fill: element.properties.get('color')
+      fill: element.properties.get('color'),
     };
 
     let w = element.properties.getIn(['width', 'length']);
@@ -70,18 +72,21 @@ export default {
     let d = element.properties.getIn(['depth', 'length']);
     let geometry = new BoxGeometry(w, h, d);
     let material = new MeshBasicMaterial({
-      color: element.properties.get('color')
+      color: element.properties.get('color'),
     });
 
     let mesh = new Mesh(geometry, material);
 
-    let box = new BoxHelper(mesh, !element.selected ? ReactPlannerSharedStyle.LINE_MESH_COLOR.unselected : ReactPlannerSharedStyle.MESH_SELECTED );
+    let box = new BoxHelper(
+      mesh,
+      !element.selected ? ReactPlannerSharedStyle.LINE_MESH_COLOR.unselected : ReactPlannerSharedStyle.MESH_SELECTED,
+    );
     box.material.linewidth = 2;
     box.renderOrder = 1000;
     mesh.add(box);
 
-    mesh.position.y = (h / 2);
+    mesh.position.y = h / 2;
 
     return Promise.resolve(mesh);
-  }
+  },
 };
