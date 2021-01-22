@@ -5,25 +5,28 @@ import tornado
 import re
 import json
 import logging
-from sqlalchemy import create_engine,select,insert
-from datetime import time 
+from sqlalchemy import create_engine, select, insert
+from datetime import time
 from libs.helper import helper
-from models import Rooms,session,Settings,User
+from models import Rooms, session, Settings, User, Sensor_Data
 from passlib.hash import pbkdf2_sha256
 sql_inject_re_byt = re.compile(b'\'|"')
 sql_inject_re_str = re.compile('\'|"')
 
-def build_json_msg( sid, msg_type, status, text ):
+
+def build_json_msg(sid, msg_type, status, text):
     """
         Baue Antwort aus sid, msg_type (s), status (i), text (s)
     """
 
-    return '{ "MSG_TYPE": "%s", "ID": "%s", "STATUS": %i, "TEXT": "%s" }' % ( msg_type, sid, status, text )
+    return '{ "MSG_TYPE": "%s", "ID": "%s", "STATUS": %i, "TEXT": "%s" }' % (msg_type, sid, status, text)
+
 
 def replace_dict(the_dict):
     for k, v in the_dict.items():
         the_dict[k] = do_replace(the_dict, k)
     return the_dict
+
 
 def replace_list(the_list):
     nr = 0
@@ -31,21 +34,23 @@ def replace_list(the_list):
         the_list[nr] = do_replace(the_list, nr)
         nr += 1
     return the_list
-    
+
+
 def do_replace(the_thing, k):
     v = the_thing[k]
-    if (type(v).__name__=='str'):
-        return sql_inject_re_str.sub('',v)
-    elif (type(the_thing[k]).__name__=='bytes'):
-        return sql_inject_re_byt.sub(b'',v)
-    elif (type(the_thing[k]).__name__=='list'):
+    if (type(v).__name__ == 'str'):
+        return sql_inject_re_str.sub('', v)
+    elif (type(the_thing[k]).__name__ == 'bytes'):
+        return sql_inject_re_byt.sub(b'', v)
+    elif (type(the_thing[k]).__name__ == 'list'):
         return replace_list(v)
-    elif (type(the_thing[k]).__name__=='dict'):
+    elif (type(the_thing[k]).__name__ == 'dict'):
         return replace_dict(v)
     else:
-        return v # leave unchanged int, float, ...
-class MainHandler(tornado.websocket.WebSocketHandler):
+        return v  # leave unchanged int, float, ...
 
+
+class MainHandler(tornado.websocket.WebSocketHandler):
 
     def check_origin(self, origin):
         print(origin)
@@ -57,15 +62,16 @@ class MainHandler(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         logger = logging.getLogger()
         answer = None
-        data = helper.is_json( message )
+        data = helper.is_json(message)
         logger.warning(data)
         if data == False:
-            self.write_message( 'malformed JSON' )
-            log( fh, 1,  'Out: '+'malformed JSON' )
+            self.write_message('malformed JSON')
+            log(fh, 1,  'Out: '+'malformed JSON')
             return
         obj = msg_type = sid = None
         if "MSG_TYPE" not in data:
-            answer = helper.build_json_answer(data["ID"],"INVALID",json.dumps("PLEASE ENTER MESSAGE TYPE"))
+            answer = helper.build_json_answer(
+                data["ID"], "INVALID", json.dumps("PLEASE ENTER MESSAGE TYPE"))
             self.write_message(answer)
             return
 
@@ -81,46 +87,88 @@ class MainHandler(tornado.websocket.WebSocketHandler):
                 session.commit()
             except:
                 session.rollback()
-            answer = helper.build_json_answer(data["ID"],"SUCCESS",json.dumps(room.name +" erfolgreich hinzugefügt"))
+            answer = helper.build_json_answer(
+                data["ID"], "SUCCESS", json.dumps(room.name + " erfolgreich hinzugefügt"))
 
         elif MSG_TYPE == "GET_ROOM_FROM_DATABASE":
             room = session.query(Rooms).get(data["ROOM_NAME"])
             logger.warning(room)
-            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(room.data))
-        
+            answer = helper.build_json_answer(
+                data["ID"], MSG_TYPE, json.dumps(room.data))
+
         elif MSG_TYPE == "SHOW_ALL_ROOMS":
             result = session.query(Rooms).all()
             room_names = []
             for room in result:
                 logger.warning(room)
                 room_names.append(room.name)
-            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(room_names))
+            answer = helper.build_json_answer(
+                data["ID"], MSG_TYPE, json.dumps(room_names))
 
+        # elif MSG_TYPE == "GET_SENSORDATA_FROM_DATABASE":
+        #     sensor = session.query(Sensor_Data).get(data["DATA_TYPE"])
+        #     logger.warning(sensor)
+        #     answer = helper.build_json_answer(
+        #         data["ID"], MSG_TYPE, json.dumps(sensor.data))
+
+        elif MSG_TYPE == "SHOW_ALL_SENSOR_DATA":
+            result = session.query(Sensor_Data).all()
+
+            csuids = []
+            panids = []
+            tmps = []
+            hums = []
+            co2s = []
+            vocs = []
+            bats = []
+            times = []
+            dates = []
+            sensor = [csuids, panids, tmps, hums,
+                      co2s, vocs, bats, times, dates]
+
+            for sensDat in result:
+                logger.warning(sensDat)
+                csuids.append(sensDat.csUID)
+                panids.append(sensDat.panID)
+                tmps.append(sensDat.tmp)
+                hums.append(sensDat.hum)
+                co2s.append(sensDat.co2)
+                vocs.append(sensDat.voc)
+                bats.append(sensDat.bat)
+                times.append(sensDat.time)
+                dates.append(sensDat.date)
+
+            answer = helper.build_json_answer(
+                data["ID"], MSG_TYPE, json.dumps(sensor))
 
         elif MSG_TYPE == "GET_ALL_SETTINGS":
             result = session.query(Settings).all()
             settings = []
             for setting in result:
-                settings.append({RULE:setting.rule,VALUE:setting.value})
-            
-            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(settings))
+                settings.append({RULE: setting.rule, VALUE: setting.value})
+
+            answer = helper.build_json_answer(
+                data["ID"], MSG_TYPE, json.dumps(settings))
             logger.warning(result)
 
         elif MSG_TYPE == "LOGIN":
-            result = {"STATUS":"FAIL"}
+            result = {"STATUS": "FAIL"}
             user = session.query(User).get(data["EMAIL"])
             if user:
                 if (pbkdf2_sha256.verify(data["PASSWORD"], user.password) == True):
                     result = {
-                        "STATUS":"SUCCESS",
+                        "STATUS": "SUCCESS",
                         "EMAIL": user.email,
                         "USERNAME": user.username,
-                        "LAST_LOGIN":user.last_login 
+                        "LAST_LOGIN": user.last_login
                     }
-                    
-            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(result,default=str))
+
+            answer = helper.build_json_answer(
+                data["ID"], MSG_TYPE, json.dumps(result, default=str))
+
         elif MSG_TYPE == "REGISTER":
-            hashed_password = pbkdf2_sha256.encrypt(data["PASSWORD"], rounds=12000, salt_size=16)
+            hashed_password = pbkdf2_sha256.encrypt(
+                data["PASSWORD"], rounds=12000, salt_size=16)
             user = User()
             user.email = data["EMAIL"]
             user.password = hashed_password
@@ -132,17 +180,20 @@ class MainHandler(tornado.websocket.WebSocketHandler):
             except Exception as e:
                 logger.error('Error at %s', 'division', exc_info=e)
                 session.rollback()
-                self.write_message(helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps({"STATUS":"DUPLICATE"})))
-                return 
+                self.write_message(helper.build_json_answer(
+                    data["ID"], MSG_TYPE, json.dumps({"STATUS": "DUPLICATE"})))
+                return
 
             result = session.query(User).get(data["EMAIL"])
             result = {
                 "EMAIL": result.email,
                 "PASSWORD": result.password
             }
-            answer = helper.build_json_answer(data["ID"],MSG_TYPE,json.dumps(result))
+            answer = helper.build_json_answer(
+                data["ID"], MSG_TYPE, json.dumps(result))
         else:
-            answer = helper.build_json_answer(data["ID"],"INVALID",json.dumps("INVALID MESSAGE TYPE"))
+            answer = helper.build_json_answer(
+                data["ID"], "INVALID", json.dumps("INVALID MESSAGE TYPE"))
 
         if answer:
             logger.warning(answer)
@@ -152,11 +203,9 @@ class MainHandler(tornado.websocket.WebSocketHandler):
         print("WebSocket closed")
 
 
-
-
 if __name__ == "__main__":
     application = tornado.web.Application([
         (r"/ws", MainHandler),
-    ],debug=True)
+    ], debug=True)
     application.listen(8888)
     tornado.ioloop.IOLoop.current().start()

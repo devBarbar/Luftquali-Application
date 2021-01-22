@@ -12,6 +12,11 @@ const items: MenuItemType[] = [
     link: { to: '/floorplanner' },
   },
   {
+    title: 'Show statistics',
+    icon: { name: 'home' },
+    link: { to: '/statistics' },
+  },
+  {
     title: 'FEATURES',
     group: true,
   },

@@ -31,6 +31,7 @@ const Home = () => {
         {allRooms
           ? allRooms.map((val, index) => {
               return (
+                // val.name etc....
                 <Col onClick={(e) => loadRoomDataFromDatabase(val)} breakPoint={{ xs: 12, md: 6 }}>
                   <Card>
                     <CardHeader>{val}</CardHeader>
