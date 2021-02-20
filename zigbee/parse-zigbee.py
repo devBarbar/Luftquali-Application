@@ -13,10 +13,10 @@ myports = [tuple(p) for p in list(serial.tools.list_ports.comports())]
 print(myports)
 testing = True
 
-today = date.today()
-now = datetime.now().time()
+# today = date.today()
+# now = datetime.now().time()
 sensorData = {}
-i = 1  # only used for testing
+i = 1  # TODO only used for testing
 db_config = {
     'user': 'root',
     'password': 'password',
@@ -24,11 +24,10 @@ db_config = {
     'database': 'mysql_database',
     'raise_on_warnings': True
 }
-# prepare inserting data into table sensor_data
 
-# test
 
 # establish connection to device
+# TODO detect COM port
 while True and not testing:
     try:
         ser = serial.Serial('COM4', 38400, timeout=1)
@@ -57,12 +56,14 @@ while True:
         cursor.execute("SHOW TABLES LIKE 'SENSOR_DATA'")
         result = cursor.fetchone()
         if (operator.not_(result)):  # table "sensor_data" exists not
-            cursor.execute("CREATE TABLE SENSOR_DATA "
-                           "(ID INT AUTO_INCREMENT PRIMARY KEY, "
-                           "SENSOR VARCHAR(90) ,"
-                           "DATA_TYPE VARCHAR(45), "
-                           "VALUE VARCHAR(128), "
-                           "TIMESTAMP TIMESTAMP)")
+            cursor.execute("CREATE TABLE SENSOR_DATA"
+                           "(ID INT AUTO_INCREMENT,"
+                           "csUID VARCHAR(45),"
+                           "panID VARCHAR(45),"
+                           "DATA_TYPE VARCHAR(45),"
+                           "VALUE VARCHAR(45),"
+                           "TIMESTAMP TIMESTAMP)"
+                           "PRIMARY KEY (ID, csUID, panID) )")
 
         cursor.execute("SHOW TABLES")
         for tb in cursor:
@@ -81,54 +82,70 @@ while True:
             sys.exit(1)
 
 
-# read data from serial port
 # while True:
-add_sensor_data = "INSERT INTO SENSOR_DATA (DATA_TYPE, SENSOR, VALUE, TIMESTAMP) VALUES (%s,%s, %s, %s)"
+add_sensor_data = ("INSERT INTO SENSOR_DATA ("
+                   "csUID, panID, DATA_TYPE, VALUE, TIMESTAMP)"
+                   "VALUES (%s, %s, %s, %s, %s)")
+
+
+# TODO
+# read data from serial port
 while i < 5 and not testing:  # only for testing
-    today = date.today()
-    now = datetime.now().time()
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     data = ser.readline(1000)
 
     if b'Zig' in data:
         i += 1  # only for testing
         sensor_data = (data, 1, today, now)
-        cursor.execute(add_sensor_data, sensor_data)
-        cnx.commit()
+        print(sensor_data)
+        # cursor.execute(add_sensor_data, sensor_data)
+        # cnx.commit()
 
         # only for testing
-        sensorData.update({'type': 'test', 'value': data,
-                           'date': today, 'time': now})
-        print(sensorData)
+        # sensorData.update({'type': 'test', 'value': data,
+        #                    'date': today, 'time': now})
+        # print(sensorData)
 
 
 def fake_data():
     result = []
-    types = ["H", "T", "Q"]
-    sensorID = ["P0000001", "P0000002", "P00000003"]
-    for i in range(0, 3):
+    dataTypes = ["tmp", "hum", "co2", "voc", "bat"]
+    csUIDs = ["0xA000D", "0xB000D", "0xC000D", "0xD000D", "0xE000D"]
+    panIDs = ["0x12345AAA", "0x12345BBB", "0x12345CCC"]
+
+    for i in range(0, 5):
         if i == 0:
-            values = [random.randint(0, 100) for _ in range(20)]
+            value = random.randint(0, 100)
         elif i == 1:
-            values = [random.randint(0, 40) for _ in range(20)]
+            value = random.randint(0, 80)
         elif i == 2:
-            values = values = [random.randint(400, 1200) for _ in range(20)]
-        result.append(json.dumps({"SENSOR": "%s", "TYPE": "%s", "VALUES": "%s"}) % (
-            sensorID[i], types[i], values))
-    time.sleep(10)
+            value = random.randint(400, 1200)
+        elif i == 3:
+            value = random.randint(500, 2000)
+        elif i == 4:
+            value = random.randint(0, 100)
+
+        result.append(json.dumps(
+            {"csUID": "%s", "panID": "%s", "DATA_TYPE": "%s", "VALUE": "%s"})
+            % (csUIDs[i], panIDs[0], dataTypes[i], value))
+
+    time.sleep(5)
     return json.dumps(result)
 
 
 while True and testing:
     sensor_data = json.loads(fake_data())
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(sensor_data)
     print(type(sensor_data))
-    for sensor in sensor_data:
 
+    for sensor in sensor_data:
         data = json.loads(sensor)
         print(type(sensor))
         print(type(data))
         print(data)
-        params = (data["TYPE"], data["SENSOR"], data["VALUES"], datetime.now())
+        params = (data["csUID"], data["panID"],
+                  data["DATA_TYPE"], data["VALUE"], now)
         cursor.execute(add_sensor_data, params)
         cnx.commit()
 
