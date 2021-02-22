@@ -1,0 +1,30 @@
+#----------------------------------------------
+#HAL makerules - should be included into components Makerules
+#----------------------------------------------
+
+#-Compiler type definition---------------------
+IAR_PATH = "$(IAR_AVR_HOME)/avr"
+COMPILER_TYPE = IAR
+COMPILER_AND_MICRO_TYPE = IAR_AVR
+#-Tools definitions----------------------------
+AS       = $(IAR_PATH)/bin/aavr
+LD       = $(IAR_PATH)/bin/xlink
+CC       = $(IAR_PATH)/bin/iccavr
+CPP      = $(IAR_PATH)/bin/iccavr
+AR       = $(IAR_PATH)/bin/xar
+IELFTOOL = 
+NM       = @echo ----NM: There is no such utility among IAR tools.
+STRIP    = @echo ----STRIP: There is no such utility among IAR tools.
+OBJCOPY  = @echo ----OBJCOPY: There is no such utility among IAR tools.
+OBJDUMP  = @echo ----OBJDUMP: There is no such utility among IAR tools.
+SIZE     = @echo ----SIZE: There is no such utility among IAR tools.
+
+#-Compiler flags-------------------------------
+CFLAGS = --dlib_config $(IAR_PATH)/LIB/DLIB/dlAVR-5s-ec_mul-n.h   -I$(IAR_PATH)/inc   -ms --library_module -y --initializers_in_flash --no_tbaa -DENABLE_BIT_DEFINITIONS -Ohz --diag_suppress Pa050,Pe188,Pa082 -e --cpu=m256rfr2 --silent -DRELEASE -D_RF_BAT_MON_ -D_STATS_ENABLED_ -D_SLEEP_WHEN_IDLE_
+AR_KEYS =
+
+
+#-Objects to be linked with app----------------
+PLATFORM_SPECIFIC_OBJECTS  = WdtInitatmega256rfr2_Iar.o
+
+SE_PATH      = $(COMPONENTS_PATH)/./SystemEnvironment
