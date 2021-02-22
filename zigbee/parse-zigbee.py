@@ -27,18 +27,20 @@ db_config = {
 
 
 # establish connection to device
-# TODO detect COM port
+x = 0
 while True and not testing:
+    port = 'COM' + str(x)
     try:
-        ser = serial.Serial('COM4', 38400, timeout=1)
+        ser = serial.Serial(port, 38400, timeout=1)
         if ser.is_open:
             print(ser.name + ' is open..')
-        break
-    except (IOError):
-        userinput = input('ERROR could not connect to COM port\n'
-                          'Please connect device and enter "ok" to continue or "q" to quit: ')
-        if userinput != 'ok':
+            break
+        if x == 10:
+            print('connection to com port failed')
             sys.exit(1)
+    except (IOError):
+        print(f"ERROR could not connect to {port} port\n")
+    x += 1
 
 
 # establish connection to db
@@ -64,47 +66,38 @@ while True:
                            "VALUE VARCHAR(45),"
                            "TIMESTAMP TIMESTAMP)"
                            "PRIMARY KEY (ID, csUID, panID) )")
-
         cursor.execute("SHOW TABLES")
         for tb in cursor:
             print(tb)
-
         break
     except Exception as e:
         print(e)
         retry_count += 1
         time.sleep(10)
-
-        userinput = input('ERROR DB connection failed\n'
-                          'Please make sure mySQL server is running and/or configuration is correct\n'
-                          'Enter "ok" to continue or "q" to quit: ')
-        if userinput != 'ok':
-            sys.exit(1)
+        print('ERROR DB connection failed\n'
+              'Please make sure mySQL server is running and/or configuration is correct')
+        sys.exit(1)
 
 
-# while True:
 add_sensor_data = ("INSERT INTO SENSOR_DATA ("
                    "csUID, panID, DATA_TYPE, VALUE, TIMESTAMP)"
                    "VALUES (%s, %s, %s, %s, %s)")
 
 
-# TODO
 # read data from serial port
-while i < 5 and not testing:  # only for testing
+# {"csUID":"%s","panID":"%s","DATA_TYPE":"%s","VALUE":"%s"}
+while True and not testing:
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    data = ser.readline(1000)
-
-    if b'Zig' in data:
-        i += 1  # only for testing
-        sensor_data = (data, 1, today, now)
-        print(sensor_data)
-        # cursor.execute(add_sensor_data, sensor_data)
-        # cnx.commit()
-
-        # only for testing
-        # sensorData.update({'type': 'test', 'value': data,
-        #                    'date': today, 'time': now})
-        # print(sensorData)
+    serial_data = ser.readline(1000)
+    if b'panID' in serial_data:
+        data = json.loads(serial_data)
+        print(data)
+        print(type(data))
+        params = (data["csUID"], data["panID"],
+                  data["DATA_TYPE"], data["VALUE"], now)
+        print(params)
+        cursor.execute(add_sensor_data, params)
+        cnx.commit()
 
 
 def fake_data():
