@@ -1,4 +1,0 @@
-// N_AddressMap
-#define N_AddressMap_LookupByNetworkAddress N_AddressMap_LookupByNetworkAddress_Impl
-#define N_AddressMap_LookupByExtendedAddress N_AddressMap_LookupByExtendedAddress_Impl
-#define N_AddressMap_UpdateNetworkAddress N_AddressMap_UpdateNetworkAddress_Impl

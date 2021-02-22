@@ -20,7 +20,7 @@ HAL_AppTimer_t receiveTimerLed;
 static AppState_t appstate = APP_INIT;
 APS_DataReq_t dataReq;
 					  //1 234567 890123456 7890 1234
-uint8_t uart_output[]= "{\"panid\":0xxxxx,\"UID\":0xxxxx,\"role\":\"Co\"}\n\r";
+//uint8_t uart_output[]= "{\"panid\":0xxxxx,\"UID\":0xxxxx,\"role\":\"Co\"}\n\r";
 
 static uint8_t deviceType;
 
@@ -105,9 +105,9 @@ void ZDO_StartNetworkConf(ZDO_StartNetworkConf_t *confirmInfo){
 			BSP_OnLed(LED_RED); //Red Green is Coordinator
 			BSP_OnLed(LED_GREEN);
 			
-			uint16_to_hexstr(uart_output, sizeof(uart_output), CS_NWK_PANID, 11);
-			uint16_to_hexstr(uart_output, sizeof(uart_output), CS_UID,24);
-			appWriteDataToUsart(uart_output, sizeof(uart_output));
+			//uint16_to_hexstr(uart_output, sizeof(uart_output), CS_NWK_PANID, 11);
+			//uint16_to_hexstr(uart_output, sizeof(uart_output), CS_UID,24);
+			//appWriteDataToUsart(uart_output, sizeof(uart_output));
 		}
 
 	}
