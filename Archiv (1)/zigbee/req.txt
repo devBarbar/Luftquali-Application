@@ -1,0 +1,7 @@
+future==0.18.2
+iso8601==0.1.13
+mysql-connector-python==8.0.22
+protobuf==3.14.0
+pyserial==3.5
+PyYAML==5.3.1
+six==1.15.0
